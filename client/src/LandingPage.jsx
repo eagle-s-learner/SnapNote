@@ -1,9 +1,9 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "./UserContext";
+// import { AuthContext } from "./UserContext";
 
 export default function LandingPage() {
-    const userCtx = useContext(AuthContext);
+    // const userCtx = useContext(AuthContext);
 
     return (
         <div className="bg-black items-center p-6 min-h-screen max-w-full">

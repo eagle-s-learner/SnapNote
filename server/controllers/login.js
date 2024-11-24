@@ -8,9 +8,16 @@ const jsonwebtoken = require("jsonwebtoken");
 async function login(req, res){
     const {email, password} = req.body;
     console.log(email, password)
+    
+    res.end();
     // res.cookie("hey", "hello").send({msg: data});
 }
 
+
+module.exports = {
+    loginHandler: login,
+    // signupHandler: signup
+}
 // async function signup(req, res){
 //     const body = req.body;
 //     console.log(body);
@@ -18,8 +25,3 @@ async function login(req, res){
 //     console.log(file);
 //     res.end("file uploaded successfully!");
 // }
-
-module.exports = {
-    loginHandler: login,
-    // signupHandler: signup
-}
