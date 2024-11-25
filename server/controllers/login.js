@@ -5,19 +5,63 @@
 // }
 // const data = await fetctdata();
 const jsonwebtoken = require("jsonwebtoken");
-async function login(req, res){
-    const {email, password} = req.body;
-    console.log(email, password)
-    
-    res.end();
+const { sequelize } = require("../models");
+const { DataTypes } = require("sequelize");
+const User = require("../models/user")(sequelize, DataTypes);
+const bcrypt = require("bcrypt");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+const jwtSecret = process.env.JWT_SECRET;
+
+async function login(req, res) {
+    try {
+        const { email, password } = req.body;
+        console.log(email, password);
+        const user = await User.findOne({
+            where: {
+                email,
+            },
+        });
+
+        if (user) {
+            const checkPassword = bcrypt.compareSync(
+                password,
+                user.dataValues.password
+            );
+
+            if (checkPassword) {
+                jsonwebtoken.sign(
+                    {
+                        email: user.dataValues.email,
+                        password: user.dataValues.password,
+                    },
+                    jwtSecret,
+                    {},
+                    (error, token) => {
+                        if (error) {
+                            throw error;
+                        }
+
+                        res.cookie("token", token).json(user.dataValues);
+                    }
+                );
+            }else{
+                res.status(422).json({message: "Password or Email is incorrect"})
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
+    // res.end();
     // res.cookie("hey", "hello").send({msg: data});
 }
-
 
 module.exports = {
     loginHandler: login,
     // signupHandler: signup
-}
+};
 // async function signup(req, res){
 //     const body = req.body;
 //     console.log(body);
