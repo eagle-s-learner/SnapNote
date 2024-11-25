@@ -50,12 +50,13 @@ async function login(req, res) {
             }else{
                 res.status(422).json({message: "Password or Email is incorrect"})
             }
+        }else{
+            res.status(400).json({message: "User Not Found"});
         }
     } catch (error) {
-        console.log(error);
+        res.status(500).json({message: error.message})
     }
-    // res.end();
-    // res.cookie("hey", "hello").send({msg: data});
+    
 }
 
 module.exports = {
