@@ -44,7 +44,7 @@ async function login(req, res) {
                             throw error;
                         }
 
-                        res.cookie("token", token).json(user.dataValues);
+                        res.cookie("token", token).status(200).json(user.dataValues);
                     }
                 );
             }else{

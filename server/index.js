@@ -4,6 +4,7 @@ const cors = require("cors");
 const cloudinary = require("cloudinary").v2;
 const loginHandler = require("./routes/loginHandler");
 const emailverify = require("./routes/emailverify");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ const confirmAccountCreation = require("./routes/accountCreation")
 const PORT = process.env.PORT;
 
 const app = express();
+app.use(cookieParser());
 app.use(
     cors({
         credentials: true,
