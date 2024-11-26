@@ -5,6 +5,7 @@ const cloudinary = require("cloudinary").v2;
 const loginHandler = require("./routes/loginHandler");
 const emailverify = require("./routes/emailverify");
 const cookieParser = require("cookie-parser");
+const getUserProfileIfCookieSet = require("./routes/getUserProfileIfCookieSet");
 
 dotenv.config();
 
@@ -34,6 +35,8 @@ app.use("/api", emailverify);
 // app.use("/api", emailverify);
 app.use("/api", confirmAccountCreation);
 app.use("/api", loginHandler);
+
+app.use("/api", getUserProfileIfCookieSet);
 
 // app.get('/', (req, res) => {
 //     res.end(`<img src="http://localhost:3020/1729769876566.jpg"/>`);
