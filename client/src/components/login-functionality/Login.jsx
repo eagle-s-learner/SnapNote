@@ -3,27 +3,33 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../UserContext";
 import LoadingDesign from "../Loader-Spinner/LoadingDesign";
+import PopUpNotification from "../popupNotificationHandler/PopUpNotification";
 
 export default function Login() {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loginSuccess, setLoginSuccess] = useState(false);
+    // const [loginSuccess, setLoginSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const userCtx = useContext(AuthContext);
 
-    useEffect(() => {
-        if(userCtx.login){
-            setLoginSuccess(true);
-        }
-    }, [userCtx.login]);
+    const [errorOccure, setErrorOccure] = useState({
+        error: false,
+        message: ""
+    })
 
-    if(loginSuccess){
-        navigate('/');
-        return;
-    }
+    useEffect(() => {
+        // if(userCtx.login){
+        //     setLoginSuccess(true);
+        // }
+        if(userCtx.login){
+            navigate(`/${userCtx.userInfo.email.substring(0, userCtx.userInfo.email.lastIndexOf("@"))}`);
+            // return;
+        }
+    }, [userCtx.login, userCtx.userInfo?.email, navigate]);
+
 
     function handleQuiteButton() {
         navigate("/");
@@ -42,22 +48,55 @@ export default function Login() {
             response = await axios.post('http://localhost:3020/api/login/', formData, {
                 headers: {
                     "Content-Type": "application/json",
-                }
+                },
+                withCredentials: true,
             })
 
-            if(response.data.status === 200){
-                setLoginSuccess(true);
+            if(response.status === 200){
+                // console.log(response.data)
+                // setLoginSuccess(true);
+                userCtx.setLogin(true);
+                userCtx.setUserInfo(response.data)
+                setErrorOccure({
+                    error: true,
+                    message: "LoggedIn Successfully..."
+                })
+            }
+
+            if(response.status === 422 || response.status === 400){
+                setErrorOccure({
+                    error: true,
+                    message: response.data.message
+                })
             }
         }catch(error){
-            console.log(error)
+            // console.log(error)
+            setErrorOccure({
+                error: true,
+                message: error.response.data.message,
+            });
         }finally{
             setIsLoading(false);
         }
-        console.log("login")
+        // console.log("login")
+    }
+
+    function handlePopUpClose(){
+        setErrorOccure({
+            error: false,
+            message: ""
+        })
     }
 
     return (
         <div className="bg-black min-h-screen p-5">
+            {errorOccure.error && errorOccure.message.length > 0 && (
+                <PopUpNotification
+                    message={errorOccure.message}
+                    automaticCloseNotification={setErrorOccure}
+                    onClose={handlePopUpClose}
+                />
+            )}
             <div className="md:w-1/2 mx-auto">
                 <div className="flex justify-between">
                     <button onClick={handleQuiteButton}>
