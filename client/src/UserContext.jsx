@@ -13,11 +13,24 @@ export function AuthProvider({children}) {
     const [userInfo, setUserInfo] = useState({});
 
     useEffect(() => {
-        const response = axios.get('/userProfileIfCookieSet/');
-        if(response.status === 200){
-            setLogin(true)
-            setUserInfo(response.data)
-        }
+        const checkAuth = async () => {
+            try {
+                const response = await axios.get('http://localhost:3020/api/userProfileIfCookieSet/', {
+                    withCredentials: true,
+                });
+                if (response.status === 200) {
+                    setLogin(true);
+                    setUserInfo(response.data);
+                }
+            } catch (error) {
+                console.error("User not authenticated or error occurred:", error);
+                setLogin(false);
+            } finally {
+                // setLoading(false); // Stop loading once auth is checked
+            }
+        };
+
+        checkAuth();
     }, [])
 
     return <AuthContext.Provider value={{userInfo, login, setLogin, setUserInfo}}>

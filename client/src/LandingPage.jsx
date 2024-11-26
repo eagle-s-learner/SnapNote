@@ -1,9 +1,14 @@
-// import { useContext } from "react";
-import { Link } from "react-router-dom";
-// import { AuthContext } from "./UserContext";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "./UserContext";
 
 export default function LandingPage() {
-    // const userCtx = useContext(AuthContext);
+    const userCtx = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    if(userCtx.login){
+        navigate(`/${userCtx.userInfo.email.substring(0, userCtx.userInfo.email.lastIndexOf("@"))}`)
+    }
 
     return (
         <div className="bg-black items-center p-6 min-h-screen max-w-full">
