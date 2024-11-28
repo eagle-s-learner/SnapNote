@@ -23,7 +23,8 @@ export function AuthProvider({children}) {
                     setUserInfo(response.data);
                 }
             } catch (error) {
-                console.error("User not authenticated or error occurred:", error);
+                console.log(error.message + ", login to your account")
+                // console.error("User not authenticated or error occurred:", error);
                 setLogin(false);
             } finally {
                 // setLoading(false); // Stop loading once auth is checked
