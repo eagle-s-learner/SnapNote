@@ -6,6 +6,7 @@ const loginHandler = require("./routes/loginHandler");
 const emailverify = require("./routes/emailverify");
 const cookieParser = require("cookie-parser");
 const getUserProfileIfCookieSet = require("./routes/getUserProfileIfCookieSet");
+const logoutHandler = require("./routes/logoutHandler");
 
 dotenv.config();
 
@@ -38,6 +39,8 @@ app.use("/api", loginHandler);
 
 app.use("/api", getUserProfileIfCookieSet);
 
+
+app.use("/api", logoutHandler)
 // app.get('/', (req, res) => {
 //     res.end(`<img src="http://localhost:3020/1729769876566.jpg"/>`);
 // })
