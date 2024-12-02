@@ -17,19 +17,23 @@ export default function Login() {
 
     const [errorOccure, setErrorOccure] = useState({
         error: false,
-        message: ""
-    })
+        message: "",
+    });
 
     useEffect(() => {
         // if(userCtx.login){
         //     setLoginSuccess(true);
         // }
-        if(userCtx.login){
-            navigate(`/${userCtx.userInfo.email.substring(0, userCtx.userInfo.email.lastIndexOf("@"))}`);
+        if (userCtx.login) {
+            navigate(
+                `/${userCtx.userInfo.email.substring(
+                    0,
+                    userCtx.userInfo.email.lastIndexOf("@")
+                )}/home`
+            );
             // return;
         }
     }, [userCtx.login, userCtx.userInfo?.email, navigate]);
-
 
     function handleQuiteButton() {
         navigate("/");
@@ -44,48 +48,52 @@ export default function Login() {
         formData.append("password", password);
 
         let response = null;
-        try{
-            response = await axios.post('http://localhost:3020/api/login/', formData, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                withCredentials: true,
-            })
+        try {
+            response = await axios.post(
+                "http://localhost:3020/api/login/",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    withCredentials: true,
+                }
+            );
 
-            if(response.status === 200){
+            if (response.status === 200) {
                 // console.log(response.data)
                 // setLoginSuccess(true);
                 userCtx.setLogin(true);
-                userCtx.setUserInfo(response.data)
+                userCtx.setUserInfo(response.data);
                 setErrorOccure({
                     error: true,
-                    message: "LoggedIn Successfully..."
-                })
+                    message: "LoggedIn Successfully...",
+                });
             }
 
-            if(response.status === 422 || response.status === 400){
+            if (response.status === 422 || response.status === 400) {
                 setErrorOccure({
                     error: true,
-                    message: response.data.message
-                })
+                    message: response.data.message,
+                });
             }
-        }catch(error){
+        } catch (error) {
             // console.log(error)
             setErrorOccure({
                 error: true,
                 message: error.response.data.message,
             });
-        }finally{
+        } finally {
             setIsLoading(false);
         }
         // console.log("login")
     }
 
-    function handlePopUpClose(){
+    function handlePopUpClose() {
         setErrorOccure({
             error: false,
-            message: ""
-        })
+            message: "",
+        });
     }
 
     return (
