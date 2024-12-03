@@ -1,21 +1,107 @@
 import { useState } from "react";
 import NavBar from "../navBar-functionality/NavBar";
+import axios from "axios";
+import LoadingDesign from "../Loader-Spinner/LoadingDesign";
+import PopUpNotification from "../popupNotificationHandler/PopUpNotification";
 
 export default function CreatePost() {
     const [imagePost, setImagePost] = useState(null);
     const [textPost, setTextPost] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorOccure, setErrorOccure] = useState({
+        error: false,
+        message: "",
+    });
+
     const maxChars = 250;
 
     function handleImageUpload(ev) {
         setImagePost(ev.target.files[0]);
     }
 
-    function handleAddPost() {
-        console.log("add post")
+    async function handleAddPost() {
+        console.log("add post");
+        if (isLoading) {
+            return;
+        }
+        setIsLoading(true);
+        const formData = new FormData();
+
+        formData.append("textPost", textPost);
+        let response = null;
+
+        try {
+            if (imagePost != null) {
+                formData.append("imagePost", imagePost);
+                console.log(formData.entries);
+                response = await axios.post(
+                    "http://localhost:3020/api/createpostimage/",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                        withCredentials: true,
+                    }
+                );
+                if (response.status === 200) {
+                    console.log("ok");
+                }
+                setTextPost("");
+                setImagePost(null);
+            } else {
+                console.log(formData.entries());
+                response = await axios.post(
+                    "http://localhost:3020/api/createposttext/",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        withCredentials: true,
+                    }
+                );
+                if (response.status === 200) {
+                    // console.log("ok");
+                    setErrorOccure({
+                        error: true,
+                        message: response.data.message
+                    })
+                }
+                setTextPost("");
+                setImagePost(null);
+            }
+        } catch (error) {
+            // console.log(error);
+            setErrorOccure({
+                error: true,
+                message: error.response.data.message
+            })
+        } finally {
+            setIsLoading(false);
+            setErrorOccure({
+                error: false,
+                message: ""
+            })
+        }
+    }
+
+    function handleClose() {
+        setErrorOccure({
+            error: false,
+            message: ""
+        })
     }
     return (
         <div className="bg-black min-w-full min-h-screen overflow-hidden">
             <NavBar />
+            {errorOccure.error && errorOccure.message.length > 0 && (
+                <PopUpNotification
+                    message={errorOccure.message}
+                    onClose={handleClose}
+                    automaticCloseNotification={setErrorOccure}
+                />
+            )}
             {imagePost && (
                 <div className="mt-4 inset-x-auto mx-auto w-fit relative">
                     <img
@@ -113,7 +199,7 @@ export default function CreatePost() {
                     }`}
                     disabled={!textPost && !imagePost}
                 >
-                    Add Post
+                    {isLoading ? <LoadingDesign /> : "Add Post"}
                 </button>
             </div>
         </div>
