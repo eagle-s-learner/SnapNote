@@ -9,6 +9,7 @@ const getUserProfileIfCookieSet = require("./routes/getUserProfileIfCookieSet");
 const logoutHandler = require("./routes/logoutHandler");
 const createPost = require("./routes/createPost");
 const getAllPost = require("./routes/getAllPost");
+const handleUserLikeUnlike = require("./routes/handleUserLikeUnlike");
 
 dotenv.config();
 
@@ -46,6 +47,8 @@ app.use("/api", logoutHandler)
 
 app.use("/api", createPost);
 app.use("/api", getAllPost);
+
+app.use("/api", handleUserLikeUnlike);
 // app.get('/', (req, res) => {
 //     res.end(`<img src="http://localhost:3020/1729769876566.jpg"/>`);
 // })

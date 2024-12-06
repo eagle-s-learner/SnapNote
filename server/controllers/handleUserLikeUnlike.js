@@ -1,22 +1,31 @@
-const { DataTypes } = require("sequelize");
+const jsonwebtoken = require("jsonwebtoken");
 const { sequelize, Sequelize } = require("../models");
-
-const Post = require("../models/post")(sequelize, DataTypes);
-const User = require("../models/user")(sequelize, DataTypes);
+const { DataTypes } = require("sequelize");
 const Likes = require("../models/likes")(sequelize, DataTypes);
-
-const jsonWebToken = require("jsonwebtoken");
 
 const jwtSecret = process.env.JWT_SECRET;
 
-async function getAllPost(req, res) {
+async function userLike(req, res) {
+    console.log("user like");
+}
+
+async function userUnlike(req, res) {
+    // console.log("user unlike");
     const { token } = req.cookies;
+    const { user_id, post_id } = req.body;
+
     try {
         if (token) {
-            jsonWebToken.verify(token, jwtSecret, {}, async (err, user) => {
-                if (err) {
-                    throw err;
-                }
+            jsonwebtoken.verify(token, jwtSecret, {}, async (err, user) => {
+                if (err) throw err;
+
+                await sequelize.query(
+                    `DELETE FROM likes WHERE post_id = :id AND user_id = :user_id`,
+                    {
+                        replacements: { user_id: user_id, id: post_id },
+                        type: Sequelize.QueryTypes.DELETE,
+                    }
+                );
 
                 const posts = await sequelize.query(
                     `SELECT 
@@ -43,22 +52,20 @@ async function getAllPost(req, res) {
                         type: Sequelize.QueryTypes.SELECT,
                     }
                 );
-                
 
                 // console.log(posts);
 
-                res.status(200).json( {posts });
+                res.status(200).json({ posts });
             });
         }
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Failed to fetch posts" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Failed to unlike post" });
     }
+    // console.log(user_id, post_id)
 }
 
-//
-// } catch (error) {
-//     console.error("Error fetching posts:", error);
-//
-// }
-module.exports = getAllPost;
+module.exports = {
+    userLike,
+    userUnlike,
+};
