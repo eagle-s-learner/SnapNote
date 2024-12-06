@@ -84,7 +84,7 @@ export default function HomePage() {
                     { withCredentials: true }
                 );
             } else {
-                console.log(allPost[idx].post_user_id)
+                // console.log(allPost[idx].post_user_id)
                 response = await axios.post(
                     "http://localhost:3020/api/userlike",
                     {
