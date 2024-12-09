@@ -18,6 +18,16 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "user_id",
                 sourceKey: "email"
             })
+
+            User.hasMany(models.Follows, {
+                foreignKey: "following_email",
+                sourceKey: "email"
+            })
+
+            User.hasMany(models.Follows, {
+                foreignKey: "followers_email",
+                sourceKey: "email"
+            })
         }
     }
     User.init(

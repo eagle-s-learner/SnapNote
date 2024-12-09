@@ -10,6 +10,8 @@ const logoutHandler = require("./routes/logoutHandler");
 const createPost = require("./routes/createPost");
 const getAllPost = require("./routes/getAllPost");
 const handleUserLikeUnlike = require("./routes/handleUserLikeUnlike");
+const getAllRequests = require("./routes/getAllRequests");
+const acceptRequest = require("./routes/acceptRequest")
 
 dotenv.config();
 
@@ -49,6 +51,9 @@ app.use("/api", createPost);
 app.use("/api", getAllPost);
 
 app.use("/api", handleUserLikeUnlike);
+
+app.use("/api", getAllRequests);
+app.use("/api", acceptRequest)
 // app.get('/', (req, res) => {
 //     res.end(`<img src="http://localhost:3020/1729769876566.jpg"/>`);
 // })
