@@ -92,7 +92,7 @@ export default function RequestsPage() {
                                 <img
                                     src={request.profilePic}
                                     alt="Profile Picture"
-                                    className="rounded-md"
+                                    className="rounded-md w-14 h-14"
                                 />
                                 <h1 className="text-2xl sm:text-xl text-slate-300 font-semibold">
                                     {request.name}

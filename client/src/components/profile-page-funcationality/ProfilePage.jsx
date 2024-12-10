@@ -4,7 +4,6 @@ import { AuthContext } from "../../UserContext";
 import NavBar from "../navBar-functionality/NavBar";
 import FollowsPage from "./FollowsPage";
 import axios from "axios";
-import LoadingDesign from "../Loader-Spinner/LoadingDesign";
 import PopUpNotification from "../popupNotificationHandler/PopUpNotification";
 
 export default function HomePage() {
@@ -123,11 +122,11 @@ export default function HomePage() {
             )}
             <div className="mx-auto w-fit mt-7 items-center">
                 <img
-                    className="w-40 h-40 rounded-full border-4 border-blue-600"
+                    className="w-40 h-40 object-cover rounded-full border-4 border-blue-600"
                     src={userCtx.userInfo.profilePic}
                     alt="Your profile photo"
                 />
-                <h1 className="font-semibold text-white  mt-2 text-2xl">
+                <h1 className="font-semibold w-fit mx-auto text-white  mt-2 text-2xl">
                     {userCtx.userInfo.name}
                 </h1>
             </div>
@@ -167,7 +166,7 @@ export default function HomePage() {
             <hr className="mt-3 mx-auto w-full border-gray-600 border-2" />
             <div className="w-64 lg:w-96 mx-auto pb-2">
                 {allPost.length === 0 ? (
-                    <LoadingDesign />
+                    <h1 className="text-slate-400 mt-4 text-xl w-fit mx-auto font-semibold">No Post Yet ...</h1>
                 ) : (
                     allPost.map((post, index) => (
                         <div

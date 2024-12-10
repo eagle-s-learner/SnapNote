@@ -3,12 +3,15 @@ import { AuthContext } from "../../UserContext";
 import Logout from "../logout-functionality/Logout";
 import { Link, useLocation } from "react-router-dom";
 import ToggleMenu from "./ToggleMenu";
+import axios from "axios";
 
 export default function NavBar() {
     const userCtx = useContext(AuthContext);
     const [logoutAcc, setLogoutAcc] = useState(false);
     const [toggleMenu, setToggleMenu] = useState(false);
     const [userNameSerach, setUserNameSearch] = useState(false);
+
+    const [userNameSearchData, setUserNameSearchData] = useState([]);
 
     const location = useLocation();
 
@@ -28,6 +31,26 @@ export default function NavBar() {
     function handleDisplaySearchBar() {
         setUserNameSearch((prev) => !prev);
         setToggleMenu(false);
+    }
+
+    async function handleUserNameSearch(ev) {
+        console.log(ev.target.value);
+        let response = null;
+        try {
+            response = await axios.post(
+                "http://localhost:3020/api/searchuser",
+                { username: (ev.target.value).toLowerCase() },
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if(response.status == 200){
+                setUserNameSearchData(response.data.usernames)
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -158,7 +181,7 @@ export default function NavBar() {
             </div>
             <button onClick={() => handleLogoutDisplay()} id="logoutId">
                 <img
-                    className="rounded-full border-2 p-1 bg-slate-300 border-blue-400 hover:border-blue-600"
+                    className="rounded-full border-2 object-contain p-1 bg-slate-300 border-blue-400 hover:border-blue-600 w-16 h-16"
                     src={userCtx.userInfo.profilePic}
                     alt="user profile photo"
                 />
@@ -169,6 +192,7 @@ export default function NavBar() {
                 <div className="absolute top-20 z-50 p-3 rounded-full w-fit lg:right-1/2 mx-12 bg-slate-400">
                     <input
                         type="text"
+                        onChange={handleUserNameSearch}
                         placeholder="Search username..."
                         className="bg-slate-100 p-2 rounded-full text-black"
                     />
@@ -192,6 +216,11 @@ export default function NavBar() {
                             />
                         </svg>
                     </button>
+                    {userNameSearchData.length > 0 && (
+                        <div className="absolute text-white mt-3">
+                            <input type="" />
+                        </div>
+                    )}
                 </div>
             )}
         </div>

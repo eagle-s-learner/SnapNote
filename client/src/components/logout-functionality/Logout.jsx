@@ -54,7 +54,7 @@ export default function Logout({ handleLogoutDisplay }) {
                 />
             )}
             <img
-                className="mx-auto w-24 h-24 rounded-full"
+                className="mx-auto w-24 h-24 object-cover rounded-full"
                 src={userCtx.userInfo.profilePic}
             />
             <h1 className="text-white font-semibold w-fit mx-auto">

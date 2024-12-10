@@ -1,7 +1,42 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 export default function FollowsPage({
     followerOrFollowingPage,
     setFollowerOrFollowingPage,
 }) {
+    const [followersOrFollowing, setFollowersOrFollowing] = useState([]);
+
+    useEffect(() => {
+        async function gettingList() {
+            let response = null;
+            try {
+                if (followerOrFollowingPage.whichList == "Followers") {
+                    response = await axios.get(
+                        "http://localhost:3020/api/followers/",
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                }else{
+                    response = await axios.get(
+                        "http://localhost:3020/api/following/",
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                }
+
+                if(response.status == 200){
+                    setFollowersOrFollowing(response.data.lists)
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        gettingList();
+    }, [followerOrFollowingPage]);
     return (
         <div
             className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
@@ -36,26 +71,36 @@ export default function FollowsPage({
 
                 {/*  List */}
                 <div className="p-4 max-h-96 overflow-y-auto text-white">
-                    {/* {followers.map((follower, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between p-2 hover:bg-gray-100 rounded-md"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-gray-300"></div>
-              <div>
-                <p className="font-medium">{follower.username}</p>
-                <p className="text-sm text-gray-500">{follower.name}</p>
-              </div>
-            </div>
-            <button className="px-4 py-2 text-white bg-blue-500 rounded-md">
-              Follow
-            </button>
-          </div>
-        ))} */}
-                    hello
+                    {followersOrFollowing.length > 0 && followersOrFollowing.map((list, index) => (
+                        <div key={index} className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                                <img className="rounded-full w-14 h-14" src={list.profilePic} alt="Profile Picture" />
+                                <h1 className="font-medium">{list.name}</h1>
+                            </div>
+
+                            <button className="font-bold bg-slate-400 px-4 h-10 rounded-lg hover:bg-slate-500">Remove</button>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
     );
 }
+
+/* {followers.map((follower, index) => (
+<div
+key={index}
+className="flex items-center justify-between p-2 hover:bg-gray-100 rounded-md"
+>
+<div className="flex items-center space-x-3">
+<div className="w-10 h-10 rounded-full bg-gray-300"></div>
+<div>
+<p className="font-medium">{follower.username}</p>
+<p className="text-sm text-gray-500">{follower.name}</p>
+</div>
+</div>
+<button className="px-4 py-2 text-white bg-blue-500 rounded-md">
+Follow
+</button>
+</div>
+))} */

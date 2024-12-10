@@ -36,7 +36,7 @@ export default function Signup() {
         setIsLoading(true);
         const formData = new FormData();
         formData.append("name", name);
-        formData.append("email", email);
+        formData.append("email", email.toLowerCase());
 
         let response = null;
 
