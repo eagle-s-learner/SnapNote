@@ -11,7 +11,10 @@ const createPost = require("./routes/createPost");
 const getAllPost = require("./routes/getAllPost");
 const handleUserLikeUnlike = require("./routes/handleUserLikeUnlike");
 const getAllRequests = require("./routes/getAllRequests");
-const acceptRequest = require("./routes/acceptRequest")
+const acceptRequest = require("./routes/acceptRequest");
+const getfollowersOrFollowingOfUser = require("./routes/getFollowerorFollowingOfUser");
+const searchUser = require("./routes/searchUser");
+const sendRequest = require("./routes/sendRequest");
 
 dotenv.config();
 
@@ -53,7 +56,13 @@ app.use("/api", getAllPost);
 app.use("/api", handleUserLikeUnlike);
 
 app.use("/api", getAllRequests);
-app.use("/api", acceptRequest)
+app.use("/api", acceptRequest);
+
+app.use("/api", getfollowersOrFollowingOfUser);
+
+app.use("/api", searchUser);
+
+app.use("/api", sendRequest);
 // app.get('/', (req, res) => {
 //     res.end(`<img src="http://localhost:3020/1729769876566.jpg"/>`);
 // })
