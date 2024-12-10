@@ -4,7 +4,7 @@ const { sequelize, Sequelize } = require("../models");
 const jwtSecret = process.env.JWT_SECRET;
 
 async function getAllRequests(req, res){
-    console.log("req")
+    // console.log("req")
     const {token} = req.cookies;
 
     try{
@@ -22,7 +22,7 @@ async function getAllRequests(req, res){
                     LEFT JOIN
                         follows
                     ON
-                        users.email = follows.following_email
+                        users.email = follows.followers_email
                     WHERE
                         follows.following_email = :userEmail AND follows.is_following = false;`,
                     {
