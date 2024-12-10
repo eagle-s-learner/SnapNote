@@ -18,7 +18,7 @@ export default function FollowsPage({
                             withCredentials: true,
                         }
                     );
-                }else{
+                } else {
                     response = await axios.get(
                         "http://localhost:3020/api/following/",
                         {
@@ -27,8 +27,8 @@ export default function FollowsPage({
                     );
                 }
 
-                if(response.status == 200){
-                    setFollowersOrFollowing(response.data.lists)
+                if (response.status == 200) {
+                    setFollowersOrFollowing(response.data.lists);
                 }
             } catch (error) {
                 console.log(error);
@@ -37,6 +37,43 @@ export default function FollowsPage({
 
         gettingList();
     }, [followerOrFollowingPage]);
+
+    async function handleRmoveFOrF(whichList, email) {
+        let response = null;
+            try {
+                if (whichList == "Followers") {
+                    response = await axios.post(
+                        "http://localhost:3020/api/removefollower/",
+                        {
+                            followers_email: email
+                        },
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                } else {
+                    response = await axios.post(
+                        "http://localhost:3020/api/removefollowing/",
+                        {
+                            following_email: email
+                        },
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                }
+
+                if (response.status == 200) {
+                    setFollowerOrFollowingPage({
+                        showList: false,
+                        whichList: ""
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+    }
+
     return (
         <div
             className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50"
@@ -71,16 +108,34 @@ export default function FollowsPage({
 
                 {/*  List */}
                 <div className="p-4 max-h-96 overflow-y-auto text-white">
-                    {followersOrFollowing.length > 0 && followersOrFollowing.map((list, index) => (
-                        <div key={index} className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                                <img className="rounded-full w-14 h-14" src={list.profilePic} alt="Profile Picture" />
-                                <h1 className="font-medium">{list.name}</h1>
-                            </div>
+                    {followersOrFollowing.length > 0 &&
+                        followersOrFollowing.map((list, index) => (
+                            <div
+                                key={index}
+                                className="flex items-center justify-between mb-2"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <img
+                                        className="rounded-full w-14 h-14"
+                                        src={list.profilePic}
+                                        alt="Profile Picture"
+                                    />
+                                    <h1 className="font-medium">{list.name}</h1>
+                                </div>
 
-                            <button className="font-bold bg-slate-400 px-4 h-10 rounded-lg hover:bg-slate-500">Remove</button>
-                        </div>
-                    ))}
+                                <button
+                                    className="font-bold bg-slate-400 px-4 h-10 rounded-lg hover:bg-slate-500"
+                                    onClick={() =>
+                                        handleRmoveFOrF(
+                                            followerOrFollowingPage.whichList,
+                                            list.email
+                                        )
+                                    }
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
                 </div>
             </div>
         </div>
