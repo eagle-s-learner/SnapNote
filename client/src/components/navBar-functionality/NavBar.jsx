@@ -4,12 +4,18 @@ import Logout from "../logout-functionality/Logout";
 import { Link, useLocation } from "react-router-dom";
 import ToggleMenu from "./ToggleMenu";
 import axios from "axios";
+import PopUpNotification from "../popupNotificationHandler/PopUpNotification";
+import UserSearch from "./UserSearch";
 
 export default function NavBar() {
     const userCtx = useContext(AuthContext);
     const [logoutAcc, setLogoutAcc] = useState(false);
     const [toggleMenu, setToggleMenu] = useState(false);
     const [userNameSerach, setUserNameSearch] = useState(false);
+    const [errorOccure, setErrorOccure] = useState({
+        error: false,
+        message: ""
+    })
 
     const [userNameSearchData, setUserNameSearchData] = useState([]);
 
@@ -31,10 +37,11 @@ export default function NavBar() {
     function handleDisplaySearchBar() {
         setUserNameSearch((prev) => !prev);
         setToggleMenu(false);
+        setUserNameSearchData([])
     }
 
     async function handleUserNameSearch(ev) {
-        console.log(ev.target.value);
+        // console.log(ev.target.value);
         let response = null;
         try {
             response = await axios.post(
@@ -46,15 +53,43 @@ export default function NavBar() {
             );
 
             if(response.status == 200){
+                // console.log(response.data.usernames)
                 setUserNameSearchData(response.data.usernames)
+            }else{
+                setErrorOccure({
+                    error: true,
+                    message: response.data.message
+                })
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
+            setErrorOccure({
+                error: true,
+                message: error.response.data.message
+            })
+        }finally{
+            if((ev.target.value).length == 0){
+                setUserNameSearchData([])
+            }
         }
+    }
+
+    function handlePopUpClose() {
+        setErrorOccure({
+            error: false,
+            message: ""
+        })
     }
 
     return (
         <div className="relative flex px-1 w-full justify-between items-center">
+            {errorOccure.error && (
+                <PopUpNotification
+                    message={errorOccure.message}
+                    automaticCloseNotification={setErrorOccure}
+                    onClose={handlePopUpClose}
+                />
+            )}
             <img
                 className="w-20 h-20 rounded-full object-contain"
                 src="/snapNoteLogo.png"
@@ -87,7 +122,7 @@ export default function NavBar() {
                 </button>
                 {
                     <div className="hidden md:inline-flex lg:gap-12 gap-2">
-                        <button onClick={handleDisplaySearchBar}>
+                        <button onClick={handleDisplaySearchBar} id="b2">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -134,7 +169,7 @@ export default function NavBar() {
                 {<ToggleMenu handleToggleMenu={handleToggleMenu} />}
                 {toggleMenu && (
                     <div className="absolute z-50 top-16  mt-3 items-center bg-gray-800 rounded-md shadow-lg p-3 flex flex-col gap-2 text-white">
-                        <button onClick={handleDisplaySearchBar}>
+                        <button onClick={handleDisplaySearchBar} id="b1">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -217,9 +252,7 @@ export default function NavBar() {
                         </svg>
                     </button>
                     {userNameSearchData.length > 0 && (
-                        <div className="absolute text-white mt-3">
-                            <input type="" />
-                        </div>
+                        <UserSearch userNameSearchData={userNameSearchData} setErrorOccure={setErrorOccure} errorOccure={errorOccure}/>
                     )}
                 </div>
             )}
