@@ -5,9 +5,14 @@ import NavBar from "../navBar-functionality/NavBar";
 import FollowsPage from "./FollowsPage";
 import axios from "axios";
 import PopUpNotification from "../popupNotificationHandler/PopUpNotification";
+import CommentPage from "../commnet-page/CommentPage";
 
 export default function HomePage() {
     const { userName } = useParams();
+    const [wantToComment, setWantToComment] = useState({
+        openComment: false,
+        postId: -1,
+    });
     const [followerOrFollowingPage, setFollowerOrFollowingPage] = useState({
         showList: false,
         whichList: "",
@@ -53,6 +58,35 @@ export default function HomePage() {
 
         getAllPost();
     }, []);
+
+    // to get total number of comments after each comment post
+    const getAllPost = async () => {
+        let response = null;
+
+        try {
+            response = await axios.get(
+                "http://localhost:3020/api/getallpost/",
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status == 200) {
+                // console.log(response.data);
+                setAllPost(response.data.posts);
+            }
+        } catch (error) {
+            setErrorOccure({
+                error: true,
+                message: error.response.data.message,
+            });
+        } finally {
+            setErrorOccure({
+                error: false,
+                message: "",
+            });
+        }
+    };
 
     // const userName = userCtx.userInfo.email.substring(
     //     0,
@@ -166,7 +200,9 @@ export default function HomePage() {
             <hr className="mt-3 mx-auto w-full border-gray-600 border-2" />
             <div className="w-64 lg:w-96 mx-auto pb-2">
                 {allPost.length === 0 ? (
-                    <h1 className="text-slate-400 mt-4 text-xl w-fit mx-auto font-semibold">No Post Yet ...</h1>
+                    <h1 className="text-slate-400 mt-4 text-xl w-fit mx-auto font-semibold">
+                        No Post Yet ...
+                    </h1>
                 ) : (
                     allPost.map((post, index) => (
                         <div
@@ -208,7 +244,15 @@ export default function HomePage() {
                                     <span>{post.total_likes} likes</span>
                                 </button>
 
-                                <button className="flex">
+                                <button
+                                    className="flex"
+                                    onClick={() =>
+                                        setWantToComment({
+                                            openComment: true,
+                                            postId: post.post_id,
+                                        })
+                                    }
+                                >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -223,9 +267,17 @@ export default function HomePage() {
                                             d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.068.157 2.148.279 3.238.364.466.037.893.281 1.153.671L12 21l2.652-3.978c.26-.39.687-.634 1.153-.67 1.09-.086 2.17-.208 3.238-.365 1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
                                         />
                                     </svg>
-                                    <span>comment</span>
+                                    <span>{post.total_comments} comments</span>
                                 </button>
                             </div>
+                            {wantToComment.openComment &&
+                                post.post_id == wantToComment.postId && (
+                                    <CommentPage
+                                        post={post}
+                                        setWantToComment={setWantToComment}
+                                        getAllPost={getAllPost}
+                                    />
+                                )}
                         </div>
                     ))
                 )}
