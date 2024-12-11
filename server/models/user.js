@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "followers_email",
                 sourceKey: "email"
             })
+
+            User.hasMany(models.Comments, {
+                foreignKey: "commenters_id",
+                sourceKey: "email"
+            })
         }
     }
     User.init(
