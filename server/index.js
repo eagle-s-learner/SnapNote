@@ -17,6 +17,7 @@ const searchUser = require("./routes/searchUser");
 const sendRequest = require("./routes/sendRequest");
 const removerFollows = require("./routes/removeFollowerOrFollowing");
 const getComments = require("./routes/commentHandler")
+const getAllPostForHomePage = require("./routes/getAllPostForHomePage");
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 })
 
-const confirmAccountCreation = require("./routes/accountCreation")
+const confirmAccountCreation = require("./routes/accountCreation");
 
 const PORT = process.env.PORT;
 
@@ -69,6 +70,8 @@ app.use("/api", sendRequest);
 app.use("/api", removerFollows);
 
 app.use("/api", getComments);
+
+app.use("/api", getAllPostForHomePage)
 // app.get('/', (req, res) => {
 //     res.end(`<img src="http://localhost:3020/1729769876566.jpg"/>`);
 // })
