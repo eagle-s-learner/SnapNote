@@ -2,6 +2,7 @@
 import { useContext } from "react";
 import NavBar from "../navBar-functionality/NavBar";
 import { AuthContext } from "../../UserContext";
+import HomePageMiddlePart from "./HomePageMiddlePart";
 
 export default function HomePage() {
     // const params = useParams();
@@ -16,7 +17,7 @@ export default function HomePage() {
         <div className="bg-black min-w-fit min-h-screen">
             <NavBar />
             <div className="flex h-screen">
-                <div className="hidden lg:block lg:w-1/4 bg-gray-800 border-r-4 border-black text-white p-4 overflow-y-auto">
+                <div className="hidden lg:block lg:w-1/4 bg-black border-r-4 border-black text-white p-4 overflow-y-auto">
                     <div className="mx-auto w-fit items-center h-screen">
                         <img
                             src={userCtx.userInfo.profilePic}
@@ -42,14 +43,14 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                <div className="w-full lg:w-1/2 bg-gray-100 p-4 overflow-y-auto">
-                    Middle Column
+                <div className="w-full lg:w-1/2 bg-black p-4 overflow-auto">
+                    <HomePageMiddlePart />
                 </div>
 
                 <div className="hidden lg:block lg:w-1/4 bg-gray-800 text-white p-4 overflow-y-auto">
-                    Last Column 
-                    exercitationem minus dignissimos quasi. Libero maiores
-                    maxime vitae, voluptatum ut facere in est tempora placeat.
+                    Last Column exercitationem minus dignissimos quasi. Libero
+                    maiores maxime vitae, voluptatum ut facere in est tempora
+                    placeat.
                 </div>
             </div>
         </div>

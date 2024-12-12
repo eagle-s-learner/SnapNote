@@ -101,15 +101,15 @@ export default function HomePage() {
         });
     }
 
-    async function handleLikeButton(postId) {
-        let idx = allPost.length - postId;
+    async function handleLikeButton(index) {
+        let idx = index;
         // console.log(allPost[idx]);
 
         let response = null;
         try {
             if (allPost[idx].user_has_liked) {
                 response = await axios.post(
-                    "http://localhost:3020/api/userunlike",
+                    "http://localhost:3020/api/userunlike/",
                     {
                         post_id: allPost[idx].post_id,
                         user_id: allPost[idx].post_user_id,
@@ -119,7 +119,7 @@ export default function HomePage() {
             } else {
                 // console.log(allPost[idx].post_user_id)
                 response = await axios.post(
-                    "http://localhost:3020/api/userlike",
+                    "http://localhost:3020/api/userlike/",
                     {
                         post_id: allPost[idx].post_id,
                         user_id: allPost[idx].post_user_id,
@@ -222,7 +222,7 @@ export default function HomePage() {
                                 <button
                                     className="flex"
                                     onClick={() =>
-                                        handleLikeButton(post.post_id)
+                                        handleLikeButton(index)
                                     }
                                 >
                                     <svg
