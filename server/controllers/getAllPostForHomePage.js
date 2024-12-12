@@ -24,7 +24,7 @@ async function getAllPostForHomePage(req, res) {
             LEFT JOIN 
                 users ON posts.user_id = users.email
             WHERE 
-                posts.user_id = :userEmail OR follows.followers_email = :userEmail
+                posts.user_id = :userEmail OR follows.followers_email = :userEmail AND follows.is_following = true
             GROUP BY 
                 posts.id, 
                 posts.user_id, 

@@ -6,7 +6,6 @@ const Likes = require("../models/likes")(sequelize, DataTypes);
 const jwtSecret = process.env.JWT_SECRET;
 
 async function userLike(req, res) {
-    console.log("user like");
     const { token } = req.cookies;
     const { user_id, post_id } = req.body;
 
@@ -57,7 +56,6 @@ async function userLike(req, res) {
             });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Failed to unlike post" });
     }
 }
@@ -114,7 +112,6 @@ async function userUnlike(req, res) {
             });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Failed to unlike post" });
     }
     // console.log(user_id, post_id)

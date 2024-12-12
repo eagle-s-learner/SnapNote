@@ -18,6 +18,7 @@ const sendRequest = require("./routes/sendRequest");
 const removerFollows = require("./routes/removeFollowerOrFollowing");
 const getComments = require("./routes/commentHandler")
 const getAllPostForHomePage = require("./routes/getAllPostForHomePage");
+const handleUserLikeOrUnlikeAtHomePage = require("./routes/handleUserLikeOrUnlikeAtHomePage");
 
 dotenv.config();
 
@@ -71,7 +72,9 @@ app.use("/api", removerFollows);
 
 app.use("/api", getComments);
 
-app.use("/api", getAllPostForHomePage)
+app.use("/api", getAllPostForHomePage);
+
+app.use("/api", handleUserLikeOrUnlikeAtHomePage);
 // app.get('/', (req, res) => {
 //     res.end(`<img src="http://localhost:3020/1729769876566.jpg"/>`);
 // })
