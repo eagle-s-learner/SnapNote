@@ -27,7 +27,7 @@ async function sendEmail(verificationCode, clientMail) {
             html: `<p>Your Mail Verification Code is: <strong>${verificationCode}</strong> <p>`,
         });
     } catch (error) {
-        console.log("inside mail sender function");
+        // console.log("inside mail sender function");
         console.log(error.message);
     }
 }

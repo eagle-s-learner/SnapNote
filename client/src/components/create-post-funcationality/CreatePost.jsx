@@ -20,7 +20,7 @@ export default function CreatePost() {
     }
 
     async function handleAddPost() {
-        console.log("add post");
+        // console.log("add post");
         if (isLoading) {
             return;
         }
@@ -33,7 +33,7 @@ export default function CreatePost() {
         try {
             if (imagePost != null) {
                 formData.append("imagePost", imagePost);
-                console.log(formData.entries);
+                // console.log(formData.entries);
                 response = await axios.post(
                     "http://localhost:3020/api/createpostimage/",
                     formData,
@@ -45,12 +45,12 @@ export default function CreatePost() {
                     }
                 );
                 if (response.status === 200) {
-                    console.log("ok");
+                    // console.log("ok");
+                    setTextPost("");
+                    setImagePost(null);
                 }
-                setTextPost("");
-                setImagePost(null);
             } else {
-                console.log(formData.entries());
+                // console.log(formData.entries());
                 response = await axios.post(
                     "http://localhost:3020/api/createposttext/",
                     formData,
